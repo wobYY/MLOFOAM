@@ -27,8 +27,7 @@ MAX_LOG_FILE_BACKUPS = 5
 
 # Make sure that the logs directory exists
 __LOGS_DIR_PATH = pathlib.Path(__file__).parent.parent / "logs"
-if not __LOGS_DIR_PATH.exists():
-    __LOGS_DIR_PATH.mkdir(parents=True, exist_ok=True)
+__LOGS_DIR_PATH.mkdir(parents=True, exist_ok=True)
 
 LOG_RECORD_BUILTIN_ATTRS = {
     "args",
@@ -202,3 +201,6 @@ def get_logger(
         atexit.register(queue_handler.listener.stop)
 
     return logging.getLogger(**kwargs)
+
+
+log = get_logger()
