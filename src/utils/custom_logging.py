@@ -55,62 +55,6 @@ LOG_RECORD_BUILTIN_ATTRS = {
     "taskName",
 }
 
-LOGGER_CONFIG = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "default": {
-            "format": "{asctime:<23s} - {levelname:^7s} - {module} - {message}",
-            "style": "{",
-        },
-        "json": {
-            "()": "utils.logging.JSONFormatter",
-            "fmt_keys": {
-                "level": "levelname",
-                "timestamp": "timestamp",
-                "message": "message",
-                "logger": "name",
-                "pathname": "pathname",
-                "module": "module",
-                "function": "funcName",
-                "line": "lineno",
-                "thread_name": "threadName",
-            },
-        },
-    },
-    "handlers": {
-        "stdout": {
-            "class": "logging.StreamHandler",
-            "level": "WARNING",
-            "formatter": "default",
-            "stream": "ext://sys.stdout",
-        },
-        "logfile": {
-            "class": "concurrent_log_handler.ConcurrentRotatingFileHandler",
-            "level": "DEBUG",
-            "formatter": "json",
-            "filename": str(__LOGS_DIR_PATH / "app.jsonl"),
-            "maxBytes": MAX_LOG_FILE_SIZE_MB * 1000000,
-            "backupCount": MAX_LOG_FILE_BACKUPS,
-            "encoding": "utf-8",
-        },
-        "queue_handler": {
-            "class": "logging.handlers.QueueHandler",
-            "handlers": [
-                "logfile",
-            ],
-            "respect_handler_level": True,
-        },
-    },
-    "loggers": {
-        "root": {
-            "handlers": ["stdout", "queue_handler"],
-            "level": "DEBUG",
-        },
-    },
-}
-
-
 class JSONFormatter(logging.Formatter):
     """Class for formatting log messages as JSON."""
 
@@ -166,6 +110,64 @@ class JSONFormatter(logging.Formatter):
                 message[key] = val
 
         return message
+
+
+
+LOGGER_CONFIG = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "default": {
+            "format": "{asctime:<23s} - {levelname:^7s} - {module} - {message}",
+            "style": "{",
+        },
+        "json": {
+            "()": JSONFormatter,
+            "fmt_keys": {
+                "level": "levelname",
+                "timestamp": "timestamp",
+                "message": "message",
+                "logger": "name",
+                "pathname": "pathname",
+                "module": "module",
+                "function": "funcName",
+                "line": "lineno",
+                "thread_name": "threadName",
+            },
+        },
+    },
+    "handlers": {
+        "stdout": {
+            "class": "logging.StreamHandler",
+            "level": "WARNING",
+            "formatter": "default",
+            "stream": "ext://sys.stdout",
+        },
+        "logfile": {
+            "class": "concurrent_log_handler.ConcurrentRotatingFileHandler",
+            "level": "DEBUG",
+            "formatter": "json",
+            "filename": str(__LOGS_DIR_PATH / "app.jsonl"),
+            "maxBytes": MAX_LOG_FILE_SIZE_MB * 1000000,
+            "backupCount": MAX_LOG_FILE_BACKUPS,
+            "encoding": "utf-8",
+        },
+        "queue_handler": {
+            "class": "logging.handlers.QueueHandler",
+            "handlers": [
+                "logfile",
+            ],
+            "respect_handler_level": True,
+        },
+    },
+    "loggers": {
+        "root": {
+            "handlers": ["stdout", "queue_handler"],
+            "level": "DEBUG",
+        },
+    },
+}
+
 
 
 def get_logger(
