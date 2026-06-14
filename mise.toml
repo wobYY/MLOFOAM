@@ -1,3 +1,19 @@
 [tools]
 act = "latest"
 uv = "latest"
+
+[tasks.localenv]
+description = "Setup the local environment for development"
+run="""
+    uv venv --clear && \
+    uv sync"""
+
+[tasks.test]
+description = "Run tests with pytest"
+depends = ["localenv"]
+run="""
+    uv run pytest \
+    --cov=mlofoam \
+    --cov-report=html:mlofoam/tests/coverage/coverage_html \
+    --cov-report=xml:mlofoam/tests/coverage/coverage.xml \
+    mlofoam/tests/"""

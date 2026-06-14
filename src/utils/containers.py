@@ -53,19 +53,15 @@ class ContainerManager:
     def __init__(
         self,
         image_name: str,
+        container_engine: ContainerEngineManager,
         ports: dict[int, str | int] | None = None,
         volume_mounts: dict[str, str] | None = None,
         additional_runtime_args: str = "",
-        container_engine: ContainerEngineManager | None = None,
         remove_image_on_exit: bool = False,
         remove_container_on_exit: bool = True,
     ):
         # TODO: Add docstrings
-        self.container_engine = (
-            container_engine.engine
-            if container_engine
-            else ContainerEngineManager().engine
-        )
+        self.container_engine = container_engine.engine
         self.image_name = image_name
         self.containers = set()
 
@@ -191,6 +187,3 @@ class ContainerManager:
             shell=True,
             check=True,
         )
-
-
-ContainerManager("linuxserver/freecad:latest")
