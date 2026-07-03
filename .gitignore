@@ -1,6 +1,9 @@
 # Python venv
 .venv
 
+# Local files
+.local/
+
 # Temporary files
 __pycache__
 src/logs/*
